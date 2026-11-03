@@ -376,9 +376,10 @@ async function tfLoadGames() {
  * …/org/riverside-cricket-club-tas/d0eb0714/cricket-north-senior-competitions-summer-202627/f37be039/teams
  */
 const PLAYHQ_CLUB = "https://www.playhq.com/cricket-australia/org/riverside-cricket-club-tas/d0eb0714";
+const PLAYHQ_REGISTER = "https://www.playhq.com/cricket-australia/org/cricket-north/7daed31e/register";
 const slugify = (text) => String(text || "").toLowerCase().replace(/\//g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 function playhqSeasonUrl(season) {
-  if (!season?.id || !season.competition?.name) return `${PLAYHQ_CLUB}/register`;
+  if (!season?.id || !season.competition?.name) return PLAYHQ_REGISTER;
   return `${PLAYHQ_CLUB}/${slugify(`${season.competition.name} ${season.name}`)}/${season.id.slice(0, 8)}/teams`;
 }
 function setPlayhqLinks(seasonId, updateHomeLink) {
