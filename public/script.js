@@ -295,6 +295,7 @@ function tfMessage(text) {
 
 async function tfLoadTeams(seasonId, preferTeamId) {
   const my = ++tf.req;
+  setPlayhqLinks(seasonId, false);
   const teamSel = $("#tf-team");
   teamSel.disabled = true;
   teamSel.replaceChildren(el("option", {}, "Loading teams…"));
@@ -370,6 +371,25 @@ async function tfLoadGames() {
   }
 }
 
+/* ---------- Links to PlayHQ ----------
+ * PlayHQ season pages look like:
+ * …/org/riverside-cricket-club-tas/d0eb0714/cricket-north-senior-competitions-summer-202627/f37be039/teams
+ */
+const PLAYHQ_CLUB = "https://www.playhq.com/cricket-australia/org/riverside-cricket-club-tas/d0eb0714";
+const slugify = (text) => String(text || "").toLowerCase().replace(/\//g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+function playhqSeasonUrl(season) {
+  if (!season?.id || !season.competition?.name) return `${PLAYHQ_CLUB}/register`;
+  return `${PLAYHQ_CLUB}/${slugify(`${season.competition.name} ${season.name}`)}/${season.id.slice(0, 8)}/teams`;
+}
+function setPlayhqLinks(seasonId, updateHomeLink) {
+  const season = tf.seasons.find((x) => x.id === seasonId);
+  const url = playhqSeasonUrl(season);
+  const tfLink = $("#tf-playhq");
+  if (tfLink) tfLink.href = url;
+  const home = $("#playhq-season-link");
+  if (home && updateHomeLink) home.href = url;
+}
+
 async function initTeamFixtures() {
   try {
     const res = await fetch("/api/filters");
@@ -381,6 +401,9 @@ async function initTeamFixtures() {
     const saved = tfSaved();
     const start = tf.seasons.some((x) => x.id === saved.season) ? saved.season : data.defaultSeasonId;
     const seasonId = tfFillFromSeason(start);
+    tf.defaultSeasonId = data.defaultSeasonId;
+    setPlayhqLinks(data.defaultSeasonId, true);
+    setPlayhqLinks(seasonId, false);
 
     $("#tf-assoc").addEventListener("change", (e) => {
       const first = tf.seasons.find((x) => x.association.id === e.target.value);
