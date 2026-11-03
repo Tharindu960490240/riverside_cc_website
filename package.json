@@ -1,0 +1,12 @@
+{
+  "name": "riverside-cricket-club",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Riverside Cricket Club website with live PlayHQ fixtures, results and ladders, and Instagram posts",
+  "engines": { "node": ">=20.6" },
+  "scripts": {
+    "dev": "node --env-file=.env dev-server.js",
+    "start": "node --env-file=.env dev-server.js"
+  }
+}

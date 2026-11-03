@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Riverside Blues Cricket Club | Home of the Falcons</title>
+  <meta name="description" content="Riverside Cricket Club – a premier Cricket North club in Tasmania. Open to anyone of any age and ability.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta property="og:image" content="logo.png">
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand">
+        <img src="logo.png" alt="" class="logo" width="52" height="52">
+        <span class="brand-text">
+          <strong>RIVERSIDE BLUES</strong>
+          <small>Cricket Club · Cricket North</small>
+        </span>
+      </a>
+
+      <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+
+      <nav id="main-nav" class="main-nav" aria-label="Main">
+        <a href="#team-fixtures">Fixtures</a>
+        <a href="#ladder">Ladder</a>
+        <a href="#join">Teams</a>
+        <a href="#join">Juniors</a>
+        <a href="#sponsors">Sponsors</a>
+        <a href="#contact">Contact</a>
+        <a href="#join" class="btn btn-gold">Join the club</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== Hero ===== -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">More than just a club</span>
+          <h1>Home of the<br>Falcons</h1>
+          <p>A premier Cricket North club open to players of every age and ability. Seniors, women's and juniors — come and play.</p>
+          <div class="hero-actions">
+            <a href="https://www.playhq.com/cricket-australia/org/riverside-cricket-club-tas/d0eb0714" class="btn btn-gold btn-lg" target="_blank" rel="noopener">Register on PlayHQ</a>
+            <a href="#fixtures" class="btn btn-outline btn-lg">This weekend's games</a>
+          </div>
+        </div>
+
+        <!-- Next match card (filled by script.js) -->
+        <article class="match-card" aria-labelledby="next-title">
+          <div class="match-card-head">
+            <h2 id="next-title">Next match · <span id="next-team">…</span></h2>
+            <span class="live-pill" id="live-pill"><span class="dot"></span><span id="live-status">Loading…</span></span>
+          </div>
+          <div class="versus">
+            <div class="side">
+              <img src="logo.png" alt="" class="crest-logo" width="72" height="72">
+              <span>Riverside</span>
+            </div>
+            <span class="vs">VS</span>
+            <div class="side">
+              <span class="crest crest-muted" id="next-opp-crest" aria-hidden="true">?</span>
+              <span id="next-opp">…</span>
+            </div>
+          </div>
+          <dl class="match-meta">
+            <div><dt>When</dt><dd id="next-when">…</dd></div>
+            <div><dt>Where</dt><dd id="next-where">…</dd></div>
+          </dl>
+          <a href="#fixtures" class="btn btn-dark btn-block" id="match-centre">Match centre</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== Results strip ===== -->
+    <section class="results-strip" aria-label="Latest results">
+      <div class="container results-scroll" id="results"></div>
+    </section>
+
+    <!-- ===== Fixtures + Ladder ===== -->
+    <section class="container fixtures-ladder" id="fixtures">
+      <div class="panel fixtures">
+        <div class="panel-head">
+          <h2 class="section-title" id="fixtures-title">This weekend</h2>
+          <div class="filters" role="group" aria-label="Filter by team">
+            <button type="button" class="chip is-active" data-filter="all" aria-pressed="true">All</button>
+            <button type="button" class="chip" data-filter="seniors" aria-pressed="false">Seniors</button>
+            <button type="button" class="chip" data-filter="women" aria-pressed="false">Women</button>
+            <button type="button" class="chip" data-filter="juniors" aria-pressed="false">Juniors</button>
+          </div>
+        </div>
+        <ul class="fixture-list" id="fixture-list"></ul>
+        <p class="empty" id="fixture-empty" hidden>No upcoming games for this group.</p>
+        <a href="https://www.playhq.com/cricket-australia/org/riverside-cricket-club-tas/d0eb0714" class="text-link" target="_blank" rel="noopener">Full fixture on PlayHQ →</a>
+      </div>
+
+      <div class="panel ladder" id="ladder">
+        <h2 class="section-title">Ladder</h2>
+        <label class="sr-only" for="ladder-grade">Choose grade</label>
+        <select id="ladder-grade" class="grade-select" hidden></select>
+        <p class="sub" id="ladder-grade-name"></p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Team</th><th class="num">P</th><th class="num">W</th><th class="num">L</th><th class="num">Pts</th></tr>
+            </thead>
+            <tbody id="ladder-body"></tbody>
+          </table>
+        </div>
+        <p class="sub small" id="updated">Loading from PlayHQ…</p>
+      </div>
+    </section>
+
+    <!-- ===== Team fixtures with filters ===== -->
+    <section class="container team-fixtures" id="team-fixtures" aria-labelledby="tf-title">
+      <h2 class="section-title lg" id="tf-title">Fixtures &amp; results</h2>
+      <div class="filter-bar">
+        <label class="select-wrap">
+          <span class="sr-only">Association</span>
+          <select id="tf-assoc" disabled><option>Loading…</option></select>
+        </label>
+        <label class="select-wrap">
+          <span class="sr-only">Competition</span>
+          <select id="tf-comp" disabled><option>Loading…</option></select>
+        </label>
+        <label class="select-wrap">
+          <span class="sr-only">Season</span>
+          <select id="tf-season" disabled><option>Loading…</option></select>
+        </label>
+        <label class="select-wrap">
+          <span class="sr-only">Team</span>
+          <select id="tf-team" disabled><option>Loading…</option></select>
+        </label>
+      </div>
+      <div class="tf-summary" id="tf-summary" aria-live="polite"></div>
+      <ol class="tf-list" id="tf-list"></ol>
+    </section>
+
+    <!-- ===== Pathways ===== -->
+    <section class="container" id="join">
+      <h2 class="section-title lg">Find your place</h2>
+      <div class="cards">
+        <a href="#" class="card">
+          <div class="card-img tint-1">[Juniors photo]</div>
+          <div class="card-body">
+            <h3>Juniors</h3>
+            <p>Cricket Blast through to junior teams. Fun, safe and coached.</p>
+            <span class="text-link">Register →</span>
+          </div>
+        </a>
+        <a href="#" class="card">
+          <div class="card-img tint-2">[Seniors photo]</div>
+          <div class="card-body">
+            <h3>Seniors</h3>
+            <p>Premier grade to social cricket — a team for every level.</p>
+            <span class="text-link">Register →</span>
+          </div>
+        </a>
+        <a href="#" class="card">
+          <div class="card-img tint-3">[Women's photo]</div>
+          <div class="card-body">
+            <h3>Women &amp; Girls</h3>
+            <p>New to cricket or returning — all welcome, no experience needed.</p>
+            <span class="text-link">Register →</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== Instagram ===== -->
+    <section class="container instagram">
+      <div class="insta-head">
+        <div>
+          <h2 class="section-title lg">From the nest</h2>
+          <p class="sub dark">Latest from @riversidebluescc</p>
+        </div>
+        <a href="https://www.instagram.com/riversidebluescc/" class="btn btn-light" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          Follow
+        </a>
+      </div>
+      <!-- Filled from /api/instagram (see README: Instagram) -->
+      <div class="insta-grid" id="insta-grid"></div>
+    </section>
+
+    <!-- ===== Sponsors ===== -->
+    <section class="sponsors" id="sponsors">
+      <div class="container sponsors-inner">
+        <span class="eyebrow muted">Proudly supported by</span>
+        <div class="sponsor-grid">
+          <div class="sponsor">[Sponsor logo]</div>
+          <div class="sponsor">[Sponsor logo]</div>
+          <div class="sponsor">[Sponsor logo]</div>
+          <div class="sponsor">[Sponsor logo]</div>
+          <div class="sponsor">[Sponsor logo]</div>
+        </div>
+        <a href="#contact" class="text-link">Become a sponsor →</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="site-footer" id="contact">
+    <div class="container footer-grid">
+      <div class="footer-brand-col">
+        <span class="footer-logo-tile"><img src="logo.png" alt="Riverside Cricket Club, est. 1948" width="112" height="112"></span>
+        <p class="footer-tagline">Grow the next generation of cricketers and be part of our amazing cricket community.</p>
+      </div>
+
+      <nav class="footer-links" aria-label="Footer">
+        <a href="#sponsors">Advertise with us</a>
+        <a href="#contact">Contact us</a>
+        <!-- Change this to your policies page or PDF -->
+        <a href="#">Policies</a>
+      </nav>
+
+      <div class="footer-social">
+        <a href="https://www.facebook.com/riversidecc.tas.cricket.com.au/" class="social-btn" target="_blank" rel="noopener" aria-label="Riverside Cricket Club on Facebook">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/riversidebluescc/" class="social-btn" target="_blank" rel="noopener" aria-label="Riverside Cricket Club on Instagram">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="currentColor"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg>
+        </a>
+      </div>
+
+      <div class="footer-partners">
+        <a href="https://www.playhq.com/cricket-australia/org/riverside-cricket-club-tas/d0eb0714" class="partner" target="_blank" rel="noopener">
+          <span class="partner-tile"><img src="partners/playhq.png" alt="PlayHQ" width="120" height="57"></span>
+          <span class="partner-text">Fixtures, results and registrations on PlayHQ</span>
+        </a>
+        <a href="https://www.cricket.com.au" class="partner" target="_blank" rel="noopener">
+          <img src="partners/cricket-australia.png" alt="Cricket Australia" class="partner-crest" width="60" height="80">
+          <span class="partner-text">Proudly supported by Cricket Australia</span>
+        </a>
+      </div>
+    </div>
+    <p class="container copyright">© <span id="year"></span> Riverside Cricket Club · Est. 1948</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
