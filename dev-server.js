@@ -30,6 +30,8 @@ http.createServer(async (req, res) => {
     let file = path.normalize(path.join(PUBLIC_DIR, decodeURIComponent(url.pathname)));
     if (!file.startsWith(PUBLIC_DIR)) { res.writeHead(403); return res.end("Forbidden"); }
     if (url.pathname.endsWith("/")) file = path.join(file, "index.html");
+    // Clean URLs, like Vercel: /about-us → about-us.html
+    if (!path.extname(file)) file += ".html";
     const body = await readFile(file).catch(() => null);
     if (!body) { res.writeHead(404); return res.end("Not found"); }
     res.writeHead(200, { "Content-Type": MIME[path.extname(file)] || "application/octet-stream" });
