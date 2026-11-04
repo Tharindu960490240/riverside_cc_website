@@ -30,7 +30,8 @@ dev-server.js      local preview only (not used on Vercel)
 2. Upload everything in this folder **except `.env`** (it holds your keys; `.gitignore` already skips it
    if you use Git).
 3. Go to **vercel.com**, sign in with GitHub, click **Add New → Project**, and import the repository.
-4. Leave the framework as **Other** and the build settings empty (`vercel.json` sets the rest).
+4. Leave the build settings alone. `vercel.json` sets everything: framework **Other**, no install or
+   build step, website served from `public/`.
 5. Before clicking Deploy, open **Environment Variables** and add these (values are in your `.env`):
 
    | Name | Value |
@@ -87,6 +88,22 @@ The form has built-in spam protection (a hidden trap field and a limit of 5 mess
 `/documents` (the old policies page) redirects to the home page.
 To change the About page wording, edit `public/about-us.html`.
 
+## Instagram: temporary backup using the old Wix app
+Until you have an official token, the site can read posts from the Wix Instagram Feed app's server,
+using the values from your old Wix site. Add these in Vercel (the values are in your Postman request):
+
+| Name | Postman header it comes from |
+|---|---|
+| `WIX_INSTAGRAM_TOKEN` | `x-instagram-token` |
+| `WIX_INSTAGRAM_USER_ID` | `x-instagram-user-id` (17841400982995082) |
+| `WIX_COMP_ID` | `x-wix-comp-id` (comp-m46st6zl2) |
+| `WIX_INSTANCE_ID` | `x-wix-instance-id` |
+
+This is temporary: the Wix session value can expire, and everything stops when the Wix site is closed
+or the app removed. When it fails, the Instagram section shows the profile tiles and the Vercel logs say
+"Wix Instagram backup failed". `/api/health` shows which source is in use.
+As soon as `INSTAGRAM_ACCESS_TOKEN` is set, the site uses that instead and ignores the Wix values.
+
 ## Instagram token (about 10 minutes, once)
 @riversidebluescc is a business account, so this works with Instagram's official API.
 (Meta renames menus from time to time, so the wording may differ slightly.)
@@ -100,7 +117,7 @@ To change the About page wording, edit `public/about-us.html`.
 
 The token lasts 60 days. The weekly cron job in `vercel.json` refreshes it so it doesn't expire.
 If posts ever stop showing, generate a new token and update the variable.
-(The codes inside the Wix Instagram widget can't be used: Wix encrypts them.)
+(The Wix values above only work through the Wix app's server, never directly with Instagram.)
 
 ## How it stays fast
 Vercel's CDN caches each answer (fixtures 5 minutes, season lists 1 hour, Instagram 15 minutes)
@@ -111,7 +128,7 @@ the site still shows the most recent data.
 ```
 npm run dev
 ```
-Then open http://localhost:3000. It reads your keys from `.env`. No `npm install` needed.
+(`npm start` was renamed to `npm run dev`.) Then open http://localhost:3000. It reads your keys from `.env`. No `npm install` needed.
 
 ## Settings
 | Variable | What it does |

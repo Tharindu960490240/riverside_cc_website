@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   send(res, 200, {
     ok: config.hasKey && !error,
     playhqKey: config.hasKey ? "set" : "missing (PLAYHQ_API_KEY)",
-    instagram: config.hasInstagram ? "token set" : "no token (INSTAGRAM_ACCESS_TOKEN)",
+    instagram: { official: "official Instagram token", "wix-backup": "Wix backup (temporary)", none: "not set up" }[config.instagramSource],
     seasonsSetting: config.seasons.length ? config.seasons : "(auto: all current seasons)",
     found,
     error,

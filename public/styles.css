@@ -1742,10 +1742,6 @@ address {
   transform: scale(1.04);
 }
 @media (prefers-reduced-motion: reduce) {
-  .card-img img {
-    transition: none;
-  }
-  .card:hover .card-img img {
-    transform: none;
-  }
+  .card-img img { transition: none; }
+  .card:hover .card-img img { transform: none; }
 }
