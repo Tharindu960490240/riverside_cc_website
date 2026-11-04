@@ -40,4 +40,9 @@ http.createServer(async (req, res) => {
     console.error(err);
     if (!res.headersSent) { res.writeHead(500); res.end("Server error"); }
   }
-}).listen(PORT, () => console.log(`Riverside site running at http://localhost:${PORT}`));
+}).listen(PORT, () => {
+  console.log(`Riverside site running at http://localhost:${PORT}`);
+  const e = process.env;
+  console.log(`  PlayHQ key:  ${e.PLAYHQ_API_KEY ? "found" : "MISSING: check .env is in this folder"}`);
+  console.log(`  Instagram:   ${e.INSTAGRAM_ACCESS_TOKEN ? "official token" : e.WIX_INSTANCE_ID ? "Wix backup (WIX_INSTANCE_ID found)" : "not set up (no INSTAGRAM_ACCESS_TOKEN or WIX_INSTANCE_ID in .env)"}`);
+});

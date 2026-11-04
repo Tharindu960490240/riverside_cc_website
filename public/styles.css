@@ -1745,3 +1745,128 @@ address {
   .card-img img { transition: none; }
   .card:hover .card-img img { transform: none; }
 }
+
+/* ---- Instagram: 4:5 tiles, 8 at a time ---- */
+.insta-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.insta-tile {
+  aspect-ratio: 4 / 5;
+  max-width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(11, 37, 69, 0.06);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.insta-tile.has-img:hover {
+  box-shadow: 0 14px 30px rgba(11, 37, 69, 0.18);
+  transform: translateY(-2px);
+}
+.insta-tile:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+.insta-tile img {
+  object-position: center top;
+}
+.insta-tile.is-new {
+  animation: insta-in 0.35s ease both;
+}
+@keyframes insta-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.insta-more {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+.insta-more .btn {
+  font: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  min-width: 150px;
+  cursor: pointer;
+}
+@media (max-width: 900px) {
+  .insta-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .insta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .insta-tile { border-radius: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .insta-tile, .insta-tile.is-new { transition: none; animation: none; }
+  .insta-tile.has-img:hover { transform: none; }
+}
+/* Anything marked hidden stays hidden, even buttons and flex boxes */
+[hidden] {
+  display: none !important;
+}
+
+/* ---- Load more / Show less (fixtures and Instagram) ---- */
+.load-more-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+.load-more-bar .btn {
+  font: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  min-width: 150px;
+  cursor: pointer;
+}
+.tf-row.is-new {
+  animation: insta-in 0.35s ease both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tf-row.is-new { animation: none; }
+}
+
+/* ---- Back to top button ---- */
+.to-top {
+  position: fixed;
+  right: calc(20px + env(safe-area-inset-right, 0px));
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  z-index: 60;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  background: var(--navy);
+  color: var(--white);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(5, 20, 45, 0.3);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s ease;
+}
+.to-top.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.to-top:hover {
+  background: var(--blue);
+}
+.to-top:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+@media (max-width: 560px) {
+  .to-top {
+    width: 46px;
+    height: 46px;
+    right: calc(14px + env(safe-area-inset-right, 0px));
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .to-top { transition: none; }
+}

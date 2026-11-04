@@ -169,33 +169,87 @@ function setupLadderSelect() {
 const IG_ICON = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg>';
 const PLAY_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
 
-function renderInstagram(posts = []) {
+const IG_FIRST = 8;           // posts shown at first
+const IG_STEP = 4;            // posts added by each "Load more"
+let igPosts = [];
+let igShown = IG_FIRST;
+
+function igTile(p) {
+  const tile = el("a", { class: "insta-tile has-img", href: p.link, target: "_blank", rel: "noopener" });
+  const img = el("img", { src: p.image, alt: p.caption || "Riverside Cricket Club on Instagram", loading: "lazy", decoding: "async", referrerpolicy: "no-referrer" });
+  // If Instagram refuses an image, show the Instagram icon instead of a broken picture
+  img.addEventListener("error", () => {
+    tile.classList.remove("has-img");
+    img.replaceWith(Object.assign(document.createElement("span"), { innerHTML: IG_ICON }));
+  });
+  tile.append(img);
+  if (p.isVideo) {
+    const badge = el("span", { class: "insta-video" });
+    badge.innerHTML = PLAY_ICON;
+    tile.append(badge);
+  }
+  if (p.caption) tile.append(el("span", { class: "insta-caption" }, p.caption));
+  return tile;
+}
+
+function renderInstagram(posts) {
   const grid = $("#insta-grid");
   if (!grid) return;
-  const tints = ["#CFE2F6", "#BCD3EC", "#A9C5E6", "#DCE8F5", "#C3D8EF", "#B2CCE9"];
+  if (posts) { igPosts = posts; igShown = IG_FIRST; }
 
-  if (!posts.length) {
-    // No token yet (or Instagram is down): tiles that link to the profile
+  const more = $("#insta-more");
+  if (!igPosts.length) {
+    // No posts (not set up yet, or Instagram is down): tiles that link to the profile
+    const tints = ["#CFE2F6", "#BCD3EC", "#A9C5E6", "#DCE8F5", "#C3D8EF", "#B2CCE9", "#D5E5F6", "#B8CFEA"];
     grid.replaceChildren(...tints.map((bg) => {
       const tile = el("a", { class: "insta-tile", href: INSTAGRAM_URL, target: "_blank", rel: "noopener", "aria-label": "Open Instagram" });
       tile.style.background = bg;
       tile.innerHTML = IG_ICON;
       return tile;
     }));
+    if (more) more.hidden = true;
     return;
   }
 
-  grid.replaceChildren(...posts.map((p) => {
-    const tile = el("a", { class: "insta-tile has-img", href: p.link, target: "_blank", rel: "noopener" });
-    tile.append(el("img", { src: p.image, alt: p.caption || "Riverside Cricket Club on Instagram", loading: "lazy" }));
-    if (p.isVideo) {
-      const badge = el("span", { class: "insta-video" });
-      badge.innerHTML = PLAY_ICON;
-      tile.append(badge);
-    }
-    if (p.caption) tile.append(el("span", { class: "insta-caption" }, p.caption));
-    return tile;
-  }));
+  const visible = igPosts.slice(0, igShown);
+  // Keep tiles already on screen; only add the new ones (no flicker on "Load more")
+  const existing = grid.querySelectorAll(".insta-tile.has-img, .insta-tile[data-post]");
+  if (existing.length && existing.length < visible.length && grid.dataset.mode === "posts") {
+    visible.slice(existing.length).forEach((p) => {
+      const t = igTile(p); t.dataset.post = "1"; t.classList.add("is-new"); grid.append(t);
+    });
+  } else {
+    grid.replaceChildren(...visible.map((p) => { const t = igTile(p); t.dataset.post = "1"; return t; }));
+  }
+  grid.dataset.mode = "posts";
+
+  if (more) {
+    const loadMore = $("#insta-load-more");
+    const showLess = $("#insta-show-less");
+    const left = igPosts.length - igShown;
+    loadMore.hidden = left <= 0;
+    showLess.hidden = igShown <= IG_FIRST;
+    more.hidden = loadMore.hidden && showLess.hidden;
+  }
+}
+
+function setupInstagramButtons() {
+  const loadMore = $("#insta-load-more");
+  const showLess = $("#insta-show-less");
+  if (!loadMore || !showLess) return;
+  loadMore.addEventListener("click", () => {
+    const firstNew = igShown;
+    igShown = Math.min(igShown + IG_STEP, igPosts.length);
+    renderInstagram();
+    // Move keyboard focus to the first new post so keyboard users continue from there
+    $("#insta-grid").children[firstNew]?.focus({ preventScroll: true });
+  });
+  showLess.addEventListener("click", () => {
+    igShown = IG_FIRST;
+    renderInstagram();
+    $(".instagram")?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    loadMore.focus({ preventScroll: true });
+  });
 }
 
 async function loadInstagram() {
@@ -288,7 +342,43 @@ function tfFillSeasons(assocId, compId, seasonId) {
   return $("#tf-season").value;
 }
 
+const TF_STEP = 5;            // rounds shown at first, and added by each "Load more"
+let tfGames = [];
+let tfShown = TF_STEP;
+
+function tfRenderList() {
+  const list = $("#tf-list");
+  const before = list.children.length;
+  const visible = tfGames.slice(0, tfShown);
+  if (before && before < visible.length) {
+    // "Load more": keep the rows on screen and add the new ones
+    visible.slice(before).forEach((g) => { const row = tfRow(g); row.classList.add("is-new"); list.append(row); });
+  } else {
+    list.replaceChildren(...visible.map(tfRow));
+  }
+  const more = $("#tf-more");
+  $("#tf-load-more").hidden = tfShown >= tfGames.length;
+  $("#tf-show-less").hidden = tfShown <= TF_STEP;
+  more.hidden = $("#tf-load-more").hidden && $("#tf-show-less").hidden;
+}
+
+function setupTfButtons() {
+  $("#tf-load-more").addEventListener("click", () => {
+    tfShown = Math.min(tfShown + TF_STEP, tfGames.length);
+    tfRenderList();
+  });
+  $("#tf-show-less").addEventListener("click", () => {
+    tfShown = TF_STEP;
+    $("#tf-list").replaceChildren();
+    tfRenderList();
+    $("#team-fixtures").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    $("#tf-load-more").focus({ preventScroll: true });
+  });
+}
+
 function tfMessage(text) {
+  tfGames = [];
+  if ($("#tf-more")) $("#tf-more").hidden = true;
   $("#tf-list").replaceChildren();
   $("#tf-summary").replaceChildren(el("p", { class: "tf-message" }, text));
 }
@@ -365,7 +455,10 @@ async function tfLoadGames() {
       $("#tf-summary").append(el("p", { class: "tf-message" }, data.note || "No fixture has been published for this team yet."));
       return;
     }
-    $("#tf-list").replaceChildren(...data.games.map(tfRow));
+    tfGames = data.games;
+    tfShown = TF_STEP;
+    $("#tf-list").replaceChildren();
+    tfRenderList();
   } catch {
     if (my === tf.req) tfMessage("Couldn't load this fixture from PlayHQ. Please try again shortly.");
   }
@@ -463,6 +556,8 @@ document.addEventListener("DOMContentLoaded", () => {
   setupFilters();
   $("#ladder-grade").addEventListener("change", (e) => renderLadder(e.target.value));
   renderInstagram([]);
+  setupInstagramButtons();
+  setupTfButtons();
   loadInstagram();
   initTeamFixtures();
   loadData();

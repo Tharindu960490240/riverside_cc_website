@@ -140,7 +140,7 @@ npm run dev
 | `CLUB_NAME` | Text used as a fallback to spot Riverside teams (default `Riverside`). |
 | `CACHE_SECONDS` | How long fixtures are cached (default 300). |
 | `INSTAGRAM_ACCESS_TOKEN` | Optional. Shows the latest posts. |
-| `INSTAGRAM_POSTS` | How many posts to show (default 6). |
+| `INSTAGRAM_POSTS` | Most posts the site can show (default 32): 8 at first, then 4 more per "Load more". |
 | `CRON_SECRET` | Recommended. Stops anyone else triggering the token refresh. |
 | `RESEND_API_KEY` | Contact form: Resend API key. |
 | `CONTACT_TO_EMAIL` | Contact form: where messages go (comma-separated for several). |

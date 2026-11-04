@@ -143,6 +143,10 @@
       <div class="tf-summary" id="tf-summary" aria-live="polite"></div>
       <a href="https://www.playhq.com/cricket-australia/org/cricket-north/7daed31e/register" class="text-link tf-playhq" id="tf-playhq" target="_blank" rel="noopener">View this season on PlayHQ →</a>
       <ol class="tf-list" id="tf-list"></ol>
+      <div class="load-more-bar" id="tf-more" hidden>
+        <button type="button" class="btn btn-dark" id="tf-load-more">Load more</button>
+        <button type="button" class="btn btn-light" id="tf-show-less" hidden>Show less</button>
+      </div>
     </section>
 
     <!-- ===== Pathways ===== -->
@@ -190,6 +194,10 @@
       </div>
       <!-- Filled from /api/instagram (see README: Instagram) -->
       <div class="insta-grid" id="insta-grid"></div>
+      <div class="insta-more load-more-bar" id="insta-more" hidden>
+        <button type="button" class="btn btn-dark" id="insta-load-more">Load more</button>
+        <button type="button" class="btn btn-light" id="insta-show-less" hidden>Show less</button>
+      </div>
     </section>
 
     <!-- ===== Sponsors ===== -->
@@ -246,5 +254,6 @@
   </footer>
 
   <script src="/script.js"></script>
+  <script src="/to-top.js" defer></script>
 </body>
 </html>
