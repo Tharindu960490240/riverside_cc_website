@@ -1742,8 +1742,12 @@ address {
   transform: scale(1.04);
 }
 @media (prefers-reduced-motion: reduce) {
-  .card-img img { transition: none; }
-  .card:hover .card-img img { transform: none; }
+  .card-img img {
+    transition: none;
+  }
+  .card:hover .card-img img {
+    transform: none;
+  }
 }
 
 /* ---- Instagram: 4:5 tiles, 8 at a time ---- */
@@ -1756,7 +1760,9 @@ address {
   max-width: 100%;
   border-radius: 16px;
   box-shadow: 0 1px 2px rgba(11, 37, 69, 0.06);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 .insta-tile.has-img:hover {
   box-shadow: 0 14px 30px rgba(11, 37, 69, 0.18);
@@ -1773,8 +1779,14 @@ address {
   animation: insta-in 0.35s ease both;
 }
 @keyframes insta-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .insta-more {
   display: flex;
@@ -1791,15 +1803,28 @@ address {
   cursor: pointer;
 }
 @media (max-width: 900px) {
-  .insta-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .insta-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 @media (max-width: 560px) {
-  .insta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .insta-tile { border-radius: 12px; }
+  .insta-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .insta-tile {
+    border-radius: 12px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .insta-tile, .insta-tile.is-new { transition: none; animation: none; }
-  .insta-tile.has-img:hover { transform: none; }
+  .insta-tile,
+  .insta-tile.is-new {
+    transition: none;
+    animation: none;
+  }
+  .insta-tile.has-img:hover {
+    transform: none;
+  }
 }
 /* Anything marked hidden stays hidden, even buttons and flex boxes */
 [hidden] {
@@ -1825,7 +1850,9 @@ address {
   animation: insta-in 0.35s ease both;
 }
 @media (prefers-reduced-motion: reduce) {
-  .tf-row.is-new { animation: none; }
+  .tf-row.is-new {
+    animation: none;
+  }
 }
 
 /* ---- Back to top button ---- */
@@ -1846,7 +1873,10 @@ address {
   box-shadow: 0 8px 24px rgba(5, 20, 45, 0.3);
   opacity: 0;
   transform: translateY(12px);
-  transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    background 0.15s ease;
 }
 .to-top.is-visible {
   opacity: 1;
@@ -1868,5 +1898,7 @@ address {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .to-top { transition: none; }
+  .to-top {
+    transition: none;
+  }
 }
